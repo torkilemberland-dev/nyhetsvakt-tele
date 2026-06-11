@@ -2,10 +2,8 @@ name: Regnskap og Konkurs-Sjekk
 
 on:
   schedule:
-    # Kjører nøyaktig én gang i timen (på minutt 0)
     - cron: '0 * * * *'
   workflow_dispatch:
-    # Gjør at du kan test-kjøre manuelt på GitHub
 
 jobs:
   sjekk-regnskap:
@@ -27,6 +25,6 @@ jobs:
 
     - name: Kjører regnskapssjekk
       env:
-        # Sender med Slack-safen din til dette skriptet også
-        SLACK_TELENOR: ${{ secrets.SLACK_TELENOR }}
+        # Kobler til brreg-hemmeligheten
+        SLACK_BRREG: ${{ secrets.SLACK_BRREG }}
       run: python regnskap_varsel.py
