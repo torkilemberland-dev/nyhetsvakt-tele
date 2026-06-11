@@ -2,8 +2,12 @@ name: Regnskap og Konkurs-Sjekk
 
 on:
   schedule:
-    - cron: '0 * * * *'  # Kjører hver hele time
-  workflow_dispatch:     # Tillater manuell start
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+# Tvinger GitHub til å kjøre alt på den nye, sikre Node 24-motoren:
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   sjekk-regnskap:
@@ -27,14 +31,3 @@ jobs:
       env:
         SLACK_BRREG: ${{ secrets.SLACK_BRREG }}
       run: python regnskap_varsel.py
-
-    - name: Lagrer oppdatert tilstand (State) tilbake til GitHub
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        # Sjekk om state-filen er opprettet eller endret før vi committer
-        if [ -f brreg_state.json ]; then
-          git add brreg_state.json
-          git commit -m "Oppdaterer Brreg-state med varslede bedrifter [skip ci]" || echo "Ingen nye endringer å lagre"
-          git push origin main
-        fi
