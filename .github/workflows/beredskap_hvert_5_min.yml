@@ -5,6 +5,10 @@ on:
     - cron: '*/5 * * * *'
   workflow_dispatch:
 
+# Tvinger GitHub til å kjøre alt på den nye, sikre Node 24-motoren:
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
 jobs:
   sjekk-alle:
     runs-on: ubuntu-latest
@@ -25,7 +29,6 @@ jobs:
 
     - name: Kjører Svipper, HRS og NSSR
       env:
-        # Her kobler vi GitHub-safen til nøyaktig de navnene skriptene dine ber om:
         SLACK_BREAKING: ${{ secrets.SLACK_BREAKING }}
         SLACK_TRAFIKK: ${{ secrets.SLACK_TRAFIKK }}
       run: |
