@@ -1,0 +1,35 @@
+name: 5-Minutters Beredskapssjekk
+
+on:
+  schedule:
+    # Kjører hvert 5. minutt døgnet rundt
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    # Gjør at du kan klikke på "Run workflow" for å teste manuelt når som helst
+
+jobs:
+  sjekk-alle:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Henter kode
+      uses: actions/checkout@v4
+
+    - name: Setter opp Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Installerer pakker
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests python-dotenv
+
+    - name: Kjører Svipper, HRS og NSSR
+      env:
+        # Her sender vi med Slack-safen din inn til alle de tre skriptene
+        SLACK_TELENOR: ${{ secrets.SLACK_TELENOR }}
+      run: |
+        python svipper_varsel.py
+        python hrs_script.py
+        python nssr_script.py
